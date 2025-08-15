@@ -1,0 +1,242 @@
+(story title)Спроси Алису
+(story author)Вячеслав Добранов
+
+(banner)
+	(par)
+	(div @title) (story title or default)
+	Автор: (story author or default).
+	(line)
+	(additional banner text)
+	(line)
+	(story release $RelNum)
+	Релиз $RelNum.
+	Серийный номер (serial number).
+	(line)
+	(compiler version).
+	(library version)
+	(exhaust) { *(extension version) }
+	(par)
+
+(additional banner text)
+	Переложение на Dialog зарисовки от 2018 года, написанной на Vorple/Inform 6.
+
+(style class @center) %% Used for, well...centering, but specifically for the (any key or link) predicate
+	width: 100%;
+	text-align: center;
+
+(library links enabled)
+(default actions enabled)
+
+
+(global variable (LastObject #me))
+(global variable (TalkedToCat 0))
+
+(intro)
+	Ты открываешь глаза и видишь перед собой синее небо в обрамлении покачивающихся красно-жёлтых бутонов. Потягиваешься и садишься.
+	(look)
+
+#field
+(room *)
+(name *) Поле красных и жёлтых бутонов
+(look *)
+	%% (if) ~(* is examined) (then)
+	%% 	Ты открываешь глаза и видишь перед собой синее небо в обрамлении покачивающихся красно-жёлтых бутонов. Потягиваешься и садишься.
+	%% 	(par)
+	%% 	(now) (* is examined)
+	%% (endif)
+	Поле (l #flowers {цветов}) тянется от горизонта и до (l #horizon {горизонта}). Ослепительное колечко (l #sun {солнца}) светит с огромного тёмно-синего (l #sky {неба}). Тёплый ветер звенит цветами.
+
+#me
+(current player *)
+(dict *) собой
+(* is #in #field)
+%% (links *)
+%% 	(link [говорить с собой]) { Говорить с собой }
+(instead of [talk to *])
+	— Едят ли мошки кошек? — спрашиваешь ты сама у себя. (line)
+	(italic {— Не едят, —}) тихо произносит Кот, рассматривая когти на своей лапе.
+
+#cat
+(name *) (nom *)
+(nom *) Кот
+(gen *) Кота
+(acc *) Кот
+(ins *) Котом
+(dict *) кот котом %% почему-то не работает окончание -ом!!!!!
+(descr *) (l * {Кот}) сидит в окружении красных и жёлтых бутонов и щурится навстречу ветру.
+(appearance *)
+	(if) ~(* is greeted) (then)
+		Сзади раздаётся деликатное покашливание. Ты оборачиваешься. (line)
+		(descr *)
+		(line)— (italic {Алиссса,}) — мягко говорит он. — (italic {Почему так долго?})
+		(now) (* is greeted)
+	(else)
+		(l * {Кот}) смотрит на тебя, выжидательно наклонив голову.
+	(endif)
+%% (* is animate)
+(* is #in #field)
+(links *)
+	(TalkedToCat $temp)
+	($temp < 3)
+	(link [говорить с Котом]) { Говорить с (ins *) }
+(instead of [talk to *])
+	(TalkedToCat $times)
+	($times plus 1 into $temp)
+	(now) (TalkedToCat $temp)
+	(if) ($temp = 1) (then)
+		— Ну перестань, Кот. Музыка была просто чудесной, — ты ещё раз с удовольствием потягиваешься. — Что-то стряслось?(line)
+		(italic {— Опять Яйцо. Сидит на заборе и грозится сброситься. Мямлит что-то про гром и ноябрь. Обычная его чепуха.})
+	(elseif) ($temp = 2) (then)
+		— Что король?(line)
+		(italic {— Как всегда. Конница и рать, —}) Кот щелчком разбивает один из бутонов и тот разлетается облаком красных осколков. (italic {— Старик ничему не учится.})
+	(elseif) ($temp = 3) (then)
+		— Ладно, пошли, — ты отряхиваешь платье. — В какую сторону?(line)
+		(italic {— Ну, ты знаешь правила, —}) Кот кивком показывает куда-то позади тебя. Обернувшись и прикрыв глаза от солнца рукой, ты видишь вдалеке (l #ears {два белых уха}), торчащих над цветами и быстро удаляющихся.
+		(now)(#ears is #in #field)
+	(else)
+		Ты не можешь придумать, о чем бы можно было ещё поговорить c (l #cat {(ins *)}).
+	(endif)
+
+
+#flowers
+(name *) (nom *)
+(nom *) цветы
+(gen *) цветов
+(acc *) цветы
+(dict *) цвет
+(descr *) Поле устлано большими красными и жёлтыми цветами, их хрупкие бутоны звенят, покачиваясь на лёгком ветру.
+(* is plural)
+(* is #in #field)
+(links *)
+	(link [потрогать цветы]) { Потрогать (acc *) } (line)
+	(link [взять цветы]) { Взять (acc *) } (line)
+	(link [разбить цветы]) { Разбить (acc *) } (line)
+	(link [понюхать цветы]) { Понюхать (acc *) }
+(instead of [touch *]) Холодные как стекло и очень хрупкие.
+(instead of [take *]) Ты пытаешься сорвать один из цветков, но когда надламываешь его стебель, тот со звоном рассыпается.
+(instead of [break *]) От взмаха твоей руки несколько бутонов взрываются облаком переливающихся на солнце осколков.
+(instead of [smell *]) Хм. Цветов, пахнущих сандалом, ты ещё не встречала.
+
+#ears
+(name *) (nom *)
+(nom *) белые уши
+(dict *) бел уш кролик кроликом
+(descr *) Два длинных белых уха, чей обладатель явно куда-то спешит.
+(appearance *) Вдалеке виднеются (l * {два белых уха}), торчащих над цветами. И они быстро удаляются.
+(links *)
+	(link [бежать за кроликом]) { Бежать за Белым Кроликом } (line)
+(instead of [follow *])
+	(par)
+	Ты ухмыляешься и в следующую секунду срываешься с места, оставляя за собой след из искрящейся красно-жёлтой пыли.
+	(par)
+	(game over {Продолжение вряд ли следует})
+	(par)
+
+#sun
+(name *) (nom *)
+(nom *) солнце
+(dict *) солнц
+(descr *) Яркое маленькое колечко в центре тёмно-синего купола.
+(* is #in #field)
+
+#horizon
+(name *) (nom *)
+(nom *) горизонт
+%% (dict *) горизонт
+(descr *) Там встречаются красно-жёлтая пестрота поля и синяя глубина неба.
+(* is #in #field)
+
+#sky
+(name *) (nom *)
+(nom *) небо
+(dict *) неб
+(descr *) Огромное тёмно-синее полотно с завитками дождевых туч.
+(* is #in #field)
+
+
+
+%% (on every tick) (link) осмотреться
+
+(redraw status bar)
+	(status bar @status) {
+		(score headline)
+		(status headline)
+	}
+	(inline status bar @instatus){(statuscontents)}
+
+(location headline)
+	(span @bold) (link [осмотреться]) { (room header #field) } 
+
+(statuscontents)
+	(LastObject $lo)
+	(div @center) {
+		(par)
+		(links $lo)
+	}
+
+
+(l $Obj $Text)
+	(if) ($Obj is unlinked) (then)
+		(query $Text)
+	(else)
+		(collect words)
+			(nom $Obj)
+		(into $Words)
+		(link $Words) (query $Text)
+	(endif)
+
+
+(nom $) именительный падеж
+(gen $) родительный падеж
+(dat $) дательный падеж
+(acc $) винительный падеж
+(ins $) творительный падеж
+(pre $) предложный падеж
+
+(Nom $) (uppercase) (nom $)
+(Gen $) (uppercase) (gen $)
+(Dat $) (uppercase) (dat $)
+(Acc $) (uppercase) (acc $)
+(Ins $) (uppercase) (ins $)
+(Pre $) (uppercase) (pre $)
+
+~($ is unlinked)
+~($ is examined)
+
+
+
+(grammar [осмотреться/осм/о] for [look])
+(grammar [осмотреть/осм/о [object]] for [examine $])
+(grammar [потрогать [object]] for [touch $])
+(grammar [взять [object]] for [take $])
+(grammar [понюхать [object]] for [smell $])
+(grammar [разбить [object]] for [break $])
+(grammar [говорить [с] [object]] for [talk to $])
+(grammar [бежать [за] [object]] for [follow $])
+
+(after [examine $Obj])
+	~(not here $Obj)
+		(now)(LastObject $Obj)
+
+
+(removable word endings) %% Существительные м.р.
+	а у ом е
+
+(removable word endings) %% Существительные ж.р.
+	а ы е у ой
+
+(removable word endings) %% Существительные с.р.
+	о а у ом е
+
+(removable word endings) %% Существительные м.ч.
+	и ам ами ах
+
+(removable word endings) %% Прилагательные м.р.
+	ый ого ому ым ом ий его ему им ем
+
+(removable word endings) %% Прилагательные ж.р.
+	ая ой ую яя ей юю
+
+
+(italic $Inner) %% Right now just a thin wrapper around (span @italic)
+	(span @italic) { (query $Inner) (or) }
