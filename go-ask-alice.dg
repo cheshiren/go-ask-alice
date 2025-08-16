@@ -123,6 +123,8 @@
 (dict *) бел уш кролик кроликом
 (descr *) Два длинных белых уха, чей обладатель явно куда-то спешит.
 (appearance *) Вдалеке виднеются (l * {два белых уха}), торчащих над цветами. И они быстро удаляются.
+(* is plural)
+(* is #in #field)
 (links *)
 	(link [бежать за кроликом]) { Бежать за Белым Кроликом } (line)
 (instead of [follow *])
@@ -240,3 +242,44 @@
 
 (italic $Inner) %% Right now just a thin wrapper around (span @italic)
 	(span @italic) { (query $Inner) (or) }
+
+
+%% Game over menu
+
+(game over menu)
+	(div @meta) {
+		Вы хотите:
+		(if) (interpreter supports undo) (then)
+			(line) (space 5)
+			(if) (library links enabled) (then)
+				(link) ОТМЕНИТЬ
+			(else)
+				ОТМЕНИТЬ
+			(endif)
+			последний ход,
+		(endif)
+		(line) (space 5)
+		или начать игру 
+		(if) (library links enabled) (then)
+			(link) ЗАНОВО
+		(else)
+			ЗАНОВО
+		(endif)
+		?
+	}
+	(line)
+	(prompt and input $Words)
+	(stoppable) (parse game over $Words)
+
+%% (interface (parse game over $<Words))
+
+(parse game over [заново])
+	(restart)
+
+(parse game over [отменить])
+	(if) (undo) (or) (then)
+		(div @meta) { Не получилось отменить последний ход. }
+	(endif)
+
+(parse game over $)
+	(div @meta) { Пожалуйста, введите одну из указанных команд. }
