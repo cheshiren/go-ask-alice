@@ -283,3 +283,8 @@
 
 (parse game over $)
 	(div @meta) { Пожалуйста, введите одну из указанных команд. }
+
+(narrate undoing $Words)
+	(div @meta) { Отмена последней команды \( (print words $Words) \). }
+	(line)
+	(location headline)
