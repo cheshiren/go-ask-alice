@@ -317,7 +317,3 @@ img {
 .aaspanunf {
 	font-family: Georgia, serif;
 }
-
-p:has(input) {
-	display: none;
-}
